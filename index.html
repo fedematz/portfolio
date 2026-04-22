@@ -157,12 +157,44 @@
   .sub-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;margin-top:0.5rem}
 
   @media(max-width:700px){
-    .hero-inner{grid-template-columns:1fr}
-    .hero-photo-wrap{display:none}
-    .about-grid{grid-template-columns:1fr}
-    .exchange-grid{grid-template-columns:1fr}
-    .nav-links{display:none}
+  .hero-inner{
+    grid-template-columns:1fr;
   }
+
+  .hero-photo-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:2rem;
+  }
+
+  .hero-photo{
+    width:180px;
+    height:220px;
+  }
+
+  .about-grid{
+    grid-template-columns:1fr;
+  }
+
+  .exchange-grid{
+    grid-template-columns:1fr;
+  }
+
+  .nav-links{
+    display:flex;
+    gap:0.75rem;
+    flex-wrap:wrap;
+  }
+
+  .nav-links a{
+    font-size:12px;
+  }
+
+  nav{
+    padding:0 1rem;
+  }
+}
 </style>
 </head>
 <body>
