@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Federico Matz — Portfolio</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+    --text:#f0f0f0;--text2:#aaa;--text3:#666;
+    --accent:#7C6FE0;--accent2:#5DCAA5;--accent3:#F0997B;
+    --border:#2a2a2a;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem}
+  .nav-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+  .nav-logo{font-size:15px;font-weight:600;color:var(--text);letter-spacing:0.5px}
+  .nav-links{display:flex;gap:1.5rem}
+  .nav-links a{font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.2s;cursor:pointer}
+  .nav-links a:hover{color:var(--accent)}
+
+  section{padding:5rem 2rem}
+  .container{max-width:960px;margin:0 auto}
+
+  /* HERO */
+  #hero{padding-top:8rem;padding-bottom:5rem;min-height:100vh;display:flex;align-items:center}
+  .hero-inner{display:grid;grid-template-columns:1fr 280px;gap:3rem;align-items:center}
+  .hero-badge{display:inline-block;background:rgba(124,111,224,0.12);border:1px solid rgba(124,111,224,0.3);color:var(--accent);font-size:12px;padding:4px 12px;border-radius:20px;margin-bottom:1.5rem;letter-spacing:0.5px}
+  .hero-name{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;line-height:1.1;margin-bottom:1rem}
+  .hero-name span{color:var(--accent)}
+  .hero-title{font-size:1rem;color:var(--text2);margin-bottom:1.25rem}
+  .hero-desc{font-size:0.93rem;color:var(--text3);max-width:520px;line-height:1.7;margin-bottom:2rem}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+  .btn-primary{background:var(--accent);color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:500;transition:opacity 0.2s;cursor:pointer}
+  .btn-primary:hover{opacity:0.85}
+  .btn-outline{border:1px solid var(--border);color:var(--text2);padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px;transition:all 0.2s;cursor:pointer}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+  .hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:2rem}
+  .tag{background:var(--bg3);border:1px solid var(--border);color:var(--text3);font-size:12px;padding:4px 10px;border-radius:6px}
+  .hero-photo-wrap{display:flex;justify-content:center;align-items:center}
+  .hero-photo{width:240px;height:300px;border-radius:16px;object-fit:cover;object-position:center top;border:2px solid var(--border)}
+
+  /* SECTION TITLES */
+  .section-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem}
+  .section-title{font-size:1.8rem;font-weight:600;margin-bottom:2.5rem}
+  .divider{height:1px;background:var(--border)}
+
+  /* SOBRE MI */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  .about-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+  .about-card h3{font-size:13px;color:var(--accent2);margin-bottom:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+  .about-card p{font-size:14px;color:var(--text2);line-height:1.7}
+
+  /* TIMELINE */
+  .timeline{display:flex;flex-direction:column;gap:1.75rem}
+  .timeline-item{display:flex;gap:1.25rem;align-items:flex-start}
+  .timeline-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .tl-year{font-size:12px;color:var(--text3);min-width:90px;margin-top:2px;line-height:1.4}
+  .tl-body h3{font-size:15px;font-weight:600;margin-bottom:3px}
+  .tl-body p{font-size:13px;color:var(--text2)}
+  .tl-detail{font-size:12px;color:var(--text3);margin-top:4px;line-height:1.6}
+  .tl-badge{display:inline-block;background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.25);color:var(--accent2);font-size:11px;padding:2px 8px;border-radius:4px;margin-top:6px}
+
+  /* GALERIA en timeline */
+  .tl-gallery{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .tl-gallery img{width:120px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:transform 0.2s,border-color 0.2s}
+  .tl-gallery img:hover{transform:scale(1.04);border-color:var(--accent2)}
+
+  /* CERT */
+  .cert-thumb{width:100%;max-width:300px;border-radius:8px;border:1px solid var(--border);margin-top:10px;cursor:pointer;transition:transform 0.2s}
+  .cert-thumb:hover{transform:scale(1.02);border-color:var(--accent)}
+
+  /* LIGHTBOX */
+  .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;align-items:center;justify-content:center}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain}
+  .lightbox-close{position:absolute;top:20px;right:28px;font-size:28px;color:#fff;cursor:pointer;opacity:0.7}
+  .lightbox-close:hover{opacity:1}
+
+  /* EXPERIENCIA */
+  .exp-grid{display:flex;flex-direction:column;gap:1.25rem}
+  .exp-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color 0.2s}
+  .exp-card:hover{border-color:var(--accent)}
+  .exp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;gap:1rem}
+  .exp-title{font-size:15px;font-weight:600}
+  .exp-company{font-size:13px;color:var(--accent);font-weight:500;margin-bottom:2px}
+  .exp-date{font-size:12px;color:var(--text3);white-space:nowrap}
+  .exp-desc{font-size:13px;color:var(--text2);line-height:1.7}
+  .exp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.75rem}
+  .exp-tag{background:var(--bg4);font-size:11px;color:var(--text3);padding:3px 8px;border-radius:4px}
+
+  /* LI LINK */
+  .li-link{display:inline-block;margin-top:8px;margin-right:6px;font-size:12px;color:var(--accent);text-decoration:none;border:1px solid rgba(124,111,224,0.3);padding:3px 10px;border-radius:4px;transition:all 0.2s}
+  .li-link:hover{background:rgba(124,111,224,0.1)}
+
+  /* PROYECTOS */
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
+  .proj-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s;display:flex;flex-direction:column}
+  .proj-card:hover{border-color:var(--accent3)}
+  .proj-card.tech:hover{border-color:var(--accent2)}
+  .proj-img{width:100%;height:160px;object-fit:cover;object-position:center;display:block;cursor:pointer;transition:opacity 0.2s}
+  .proj-img:hover{opacity:0.85}
+  .proj-body{padding:1.25rem;flex:1;display:flex;flex-direction:column}
+  .proj-icon{font-size:20px;margin-bottom:0.6rem;color:var(--text3)}
+  .proj-name{font-size:14px;font-weight:600;margin-bottom:4px}
+  .proj-context{font-size:11px;color:var(--accent3);margin-bottom:0.5rem;font-weight:500;letter-spacing:0.3px}
+  .proj-card.tech .proj-context{color:var(--accent2)}
+  .proj-desc{font-size:13px;color:var(--text2);line-height:1.6;flex:1}
+  .proj-stack{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.75rem}
+  .proj-pill{background:rgba(240,153,123,0.08);border:1px solid rgba(240,153,123,0.2);color:var(--accent3);font-size:11px;padding:2px 8px;border-radius:4px}
+  .proj-card.tech .proj-pill{background:rgba(93,202,165,0.08);border-color:rgba(93,202,165,0.2);color:var(--accent2)}
+
+  /* HABILIDADES */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem}
+  .skill-category{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+  .skill-cat-title{font-size:12px;font-weight:600;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+  .skill-list{display:flex;flex-direction:column;gap:8px}
+  .skill-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+  .skill-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .soft-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:1rem}
+  .soft-pill{background:rgba(124,111,224,0.08);border:1px solid rgba(124,111,224,0.2);color:var(--accent);font-size:13px;padding:6px 14px;border-radius:20px}
+
+  /* IDIOMAS */
+  .lang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin-bottom:1.5rem}
+  .lang-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+  .lang-flag{font-size:2rem;margin-bottom:0.5rem}
+  .lang-name{font-size:16px;font-weight:600;margin-bottom:4px}
+  .lang-level{font-size:12px;color:var(--accent2);font-weight:500;margin-bottom:8px}
+  .lang-detail{font-size:12px;color:var(--text3)}
+  .lang-bar{background:var(--border);border-radius:4px;height:4px;margin-top:0.75rem}
+  .lang-fill{height:4px;border-radius:4px;background:var(--accent2)}
+  .exchange-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  .exchange-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative}
+  .exchange-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .exchange-card.ny::before{background:linear-gradient(90deg,#7C6FE0,#AFA9EC)}
+  .exchange-card.ldn::before{background:linear-gradient(90deg,#5DCAA5,#9FE1CB)}
+  .exchange-body{padding:1.5rem}
+  .exchange-location{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+  .exchange-period{font-size:12px;color:var(--text3);margin-bottom:0.75rem}
+  .exchange-desc{font-size:13px;color:var(--text2);line-height:1.6}
+  .exchange-photos{display:flex;gap:6px;padding:0 1.5rem 1.5rem}
+  .exchange-photos img{flex:1;height:100px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);transition:transform 0.2s}
+  .exchange-photos img:hover{transform:scale(1.03)}
+
+  /* CONTACTO */
+  #contacto{border-top:1px solid var(--border)}
+  .contact-inner{text-align:center;max-width:500px;margin:0 auto}
+  .contact-inner p{font-size:15px;color:var(--text2);margin-bottom:2rem}
+  .contact-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+  .contact-btn{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:10px 20px;border-radius:8px;text-decoration:none;font-size:14px;transition:all 0.2s}
+  .contact-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* SUB LABEL */
+  .sub-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;margin-top:0.5rem}
+
+  @media(max-width:700px){
+    .hero-inner{grid-template-columns:1fr}
+    .hero-photo-wrap{display:none}
+    .about-grid{grid-template-columns:1fr}
+    .exchange-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lb" onclick="closeLB()">
+  <span class="lightbox-close">✕</span>
+  <img id="lb-img" src="" alt=""/>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">Federico Matz ✦</span>
+    <div class="nav-links">
+      <a onclick="document.getElementById('sobre').scrollIntoView({behavior:'smooth'})">Sobre mí</a>
+      <a onclick="document.getElementById('educacion').scrollIntoView({behavior:'smooth'})">Educación</a>
+      <a onclick="document.getElementById('experiencia').scrollIntoView({behavior:'smooth'})">Experiencia</a>
+      <a onclick="document.getElementById('proyectos').scrollIntoView({behavior:'smooth'})">Proyectos</a>
+      <a onclick="document.getElementById('habilidades').scrollIntoView({behavior:'smooth'})">Skills</a>
+      <a onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Contacto</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Abierto a oportunidades · Buenos Aires, Argentina</div>
+        <h1 class="hero-name">Hola, soy<br/><span>Federico Matz</span></h1>
+        <p class="hero-title">Estudiante de Negocios Digitales · Emprendedor · Estrategia & Tecnología</p>
+        <p class="hero-desc">Combino pensamiento estratégico, datos y tecnología para construir proyectos con impacto real. Me apasiona la innovación, los productos sustentables y detectar oportunidades globales para adaptarlas al mercado argentino.</p>
+        <div class="hero-btns">
+          <span class="btn-primary" onclick="document.getElementById('proyectos').scrollIntoView({behavior:'smooth'})">Ver proyectos</span>
+          <span class="btn-outline" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Contactarme</span>
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Negocios Digitales</span>
+          <span class="tag">E-commerce</span>
+          <span class="tag">Data & BI</span>
+          <span class="tag">Machine Learning</span>
+          <span class="tag">Emprendimiento</span>
+          <span class="tag">C1 Inglés</span>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img class="hero-photo" src="data:image/jpeg;base64,/9j/4AAQ" alt="Federico Matz en Regent's University London" onerror="this.style.display='none'"/>
+        <!-- Fallback avatar -->
+        <div id="hero-fallback" style="width:240px;height:300px;border-radius:16px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--bg3);flex-direction:column;gap:1rem">
+          <div style="font-size:60px">👤</div>
+          <div style="font-size:12px;color:var(--text3);text-align:center">Foto de perfil<br/>disponible en LinkedIn</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOBRE MI -->
+<section id="sobre">
+  <div class="container">
+    <div class="section-label">Sobre mí</div>
+    <h2 class="section-title">Quién soy</h2>
+    <div class="about-grid">
+      <div class="about-card">
+        <h3>Mi perfil</h3>
+        <p>Estudiante de Negocios Digitales en la Universidad de San Andrés (4° año, promedio 9.0). Me gradué en ORT Argentina como Bachiller en Gestión de las Organizaciones con promedio 9.0, formación que me dio base sólida en liderazgo y pensamiento sistémico.</p>
+      </div>
+      <div class="about-card">
+        <h3>Lo que me mueve</h3>
+        <p>Soy emprendedor por naturaleza. Me atrae detectar oportunidades del mercado global y adaptarlas al contexto argentino. Tengo especial interés en productos sostenibles, herramientas digitales que automatizan procesos y marcas con propósito real.</p>
+      </div>
+      <div class="about-card">
+        <h3>Liderazgo & comunidad</h3>
+        <p>Participé como líder en ORT Launchpad y como Project Lead en UdeSA (programa LEAD). Tengo background en educación no formal y trabajo comunitario con jóvenes, lo que fortaleció mis habilidades de comunicación y facilitación.</p>
+      </div>
+      <div class="about-card">
+        <h3>Visión global</h3>
+        <p>Viví dos experiencias internacionales: intercambio académico en Regent's University London (ago–dic 2025) y programa de idiomas con EF en Estados Unidos (ene–mar 2022), donde obtuve mi certificado C1 de inglés.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCACION -->
+<section id="educacion">
+  <div class="container">
+    <div class="section-label">Formación</div>
+    <h2 class="section-title">Educación</h2>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent)"></div>
+        <div style="display:flex;gap:1rem;width:100%">
+          <div class="tl-year">Mar 2023 –<br/>actualidad</div>
+          <div class="tl-body">
+            <h3>Licenciatura en Negocios Digitales</h3>
+            <p>Universidad de San Andrés (UdeSA) · 4° año en curso · Promedio 9.0</p>
+            <p class="tl-detail">Análisis de datos, Machine Learning, Design Thinking, estrategia digital, SQL, programación, marketing digital y derecho. Participé en el Programa LEAD de desarrollo de liderazgo.</p>
+            <span class="tl-badge">Promedio 9.0</span>
+            <span class="tl-badge" style="margin-left:6px">Programa LEAD</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent2)"></div>
+        <div style="display:flex;gap:1rem;width:100%">
+          <div class="tl-year">Ago 2025 –<br/>Dic 2025</div>
+          <div class="tl-body">
+            <h3>Intercambio académico · Londres, Reino Unido</h3>
+            <p>Regent's University London</p>
+            <p class="tl-detail">Foco en marketing basado en datos, análisis de datos y estrategia comercial. Networking internacional, vida universitaria en inglés y experiencias de innovación en Impact Hub London.</p>
+            <span class="tl-badge">Internacional</span>
+            <br/>
+            <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_studyabroad-london-digitalbusiness-activity-7433169489917038592-Bh-e" target="_blank">↗ Mi post en LinkedIn</a>
+            <a class="li-link" href="https://www.linkedin.com/posts/universidad-de-san-andres_intercambios-udesafederico-matz-ugcPost-7440844226864762880-ooHi" target="_blank">↗ Post de UdeSA</a>
+            <div class="tl-gallery">
+              <img src="data:image/jpeg;base64,LONDON_SELFIE" alt="Regent's University London" onclick="openLB(this)" onerror="this.parentElement.style.display='none'"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent3)"></div>
+        <div style="display:flex;gap:1rem;width:100%">
+          <div class="tl-year">Ene 2022 –<br/>Mar 2022</div>
+          <div class="tl-body">
+            <h3>Programa de idiomas EF · Estados Unidos</h3>
+            <p>EF Education First · Certificado C1 de inglés</p>
+            <p class="tl-detail">Programa intensivo con estudiantes internacionales. Convivencia multicultural y clases académicas en inglés. Certificación nivel C1 según el Marco Común Europeo.</p>
+            <span class="tl-badge">C1 English Certificate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#555"></div>
+        <div style="display:flex;gap:1rem;width:100%">
+          <div class="tl-year">Mar 2018 –<br/>Dic 2022</div>
+          <div class="tl-body">
+            <h3>Bachiller en Gestión de las Organizaciones</h3>
+            <p>Escuela Técnica ORT Argentina · Promedio 9.0</p>
+            <p class="tl-detail">Formación técnica orientada a gestión organizacional y liderazgo. Participante del programa de emprendimiento ORT Launchpad 2022.</p>
+            <span class="tl-badge">Promedio 9.0</span>
+            <span class="tl-badge" style="margin-left:6px">ORT Launchpad</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Certificados -->
+    <div style="margin-top:2.5rem">
+      <div class="sub-label">Certificados</div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <p style="font-size:12px;color:var(--text3);margin-bottom:6px">ORT Launchpad 2022 — Programa de Emprendedorismo e Innovación</p>
+          <img class="cert-thumb" src="https://i.imgur.com/placeholder.png" alt="Certificado ORT Launchpad" onclick="openLB(this)"
+            onerror="this.style.display='none'"
+            style="display:none"/>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:13px;color:var(--text2)">
+            🏅 Certificado de participación — ORT Launchpad 2022<br/>
+            <span style="font-size:12px;color:var(--text3)">Firmado por Lucía Parrondo (Directora) y Mateo Salvatto (Director de Innovación)</span>
+          </div>
+        </div>
+        <div style="flex:1;min-width:260px">
+          <p style="font-size:12px;color:var(--text3);margin-bottom:6px">Lead Essentials — UdeSA Escuela de Negocios, 2023</p>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:13px;color:var(--text2)">
+            🏅 Certificado Lead Essentials — Programa LEAD UdeSA<br/>
+            <span style="font-size:12px;color:var(--text3)">Firmado por el Decano Dr. Daniel A. Gonzalez y Sebastián Steizel PhD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="container">
+    <div class="section-label">Trayectoria</div>
+    <h2 class="section-title">Experiencia</h2>
+    <div class="exp-grid">
+
+      <div class="exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">Customs — Marca de indumentaria</div>
+            <div class="exp-title">Estrategia Digital & Contenido</div>
+          </div>
+          <div class="exp-date">Actualidad</div>
+        </div>
+        <div class="exp-desc">Responsable de la estrategia digital: gestión de redes sociales, creación de contenido, automatización de procesos y construcción de comunidad online.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Estrategia digital</span><span class="exp-tag">Redes sociales</span><span class="exp-tag">Automatización</span><span class="exp-tag">Contenido</span>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">DropSolutions Argentina</div>
+            <div class="exp-title">Founder</div>
+          </div>
+          <div class="exp-date">Ene 2024 – presente</div>
+        </div>
+        <div class="exp-desc">Emprendimiento de dropshipping co-fundado. Importación y venta de productos a través de plataformas de e-commerce argentinas. Gestión de proveedores, logística y atención al cliente.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">E-commerce</span><span class="exp-tag">Importación</span><span class="exp-tag">Dropshipping</span><span class="exp-tag">Operaciones</span>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">Mind & Process</div>
+            <div class="exp-title">Marketing & Communications Area</div>
+          </div>
+          <div class="exp-date">Ene 2024 – Ago 2024</div>
+        </div>
+        <div class="exp-desc">Gestión de iniciativas de marketing y comunicación. Uso de Power BI para analizar performance y apoyar decisiones basadas en datos que mejoraron los resultados de contenido y redes sociales.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Marketing</span><span class="exp-tag">Power BI</span><span class="exp-tag">Consultoría</span><span class="exp-tag">Triple impacto</span>
+        </div>
+        <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_bienvenido-equipo-desarrollo-activity-7174535431131176960-gk9M" target="_blank">↗ Ver en LinkedIn</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROYECTOS -->
+<section id="proyectos">
+  <div class="container">
+    <div class="section-label">Portafolio</div>
+    <h2 class="section-title">Proyectos destacados</h2>
+
+    <div class="sub-label">Competencias & emprendimientos</div>
+    <div class="proj-grid" style="margin-bottom:2rem">
+
+      <!-- LOREAL con foto -->
+      <div class="proj-card">
+        <img class="proj-img" alt="L'Oréal Brandstorm 2025 — Federico Matz equipo finalista"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/L%27Or%C3%A9al_logo.svg/200px-L%27Or%C3%A9al_logo.svg.png"
+          onerror="this.style.display='none'"
+          onclick="openLB(this)"
+          style="object-fit:contain;background:#111;padding:1.5rem;height:100px"/>
+        <div class="proj-body">
+          <div class="proj-name">L'Oréal Mirror</div>
+          <div class="proj-context">L'Oréal Brandstorm 2025 · 🏆 Finalista Nacional</div>
+          <div class="proj-desc">App de skincare con IA: chatbot personalizado, rutinas sincronizadas con clima y calendario, sistema de recompensas e integración con Mercado Libre y Farmacity. Pitch en vivo ante jurado de L'Oréal Argentina.</div>
+          <div class="proj-stack"><span class="proj-pill">IA</span><span class="proj-pill">App design</span><span class="proj-pill">Retail tech</span><span class="proj-pill">UX</span></div>
+          <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_brandstorm2025-loraezalmirror-innovaciaejn-activity-7330354281444802560-FaXH" target="_blank">↗ Post del pitch</a>
+          <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_loraezalbrandstorm-teamwork-innovation-activity-7325973842818940931-uqk4" target="_blank">↗ Certificado</a>
+        </div>
+      </div>
+
+      <!-- UNILEVER con foto -->
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-name">Hellmann's POW!</div>
+          <div class="proj-context">Unilever UFLL 2025 · 🏆 Finalista Nacional</div>
+          <div class="proj-desc">Línea de condimentos en polvo sustentables para Hellmann's. Propuesta de innovación con foco en reducción de residuos plásticos, nuevos formatos de consumo y segmentos emergentes. Presentación ante jurado de Unilever.</div>
+          <div class="proj-stack"><span class="proj-pill">Innovación</span><span class="proj-pill">Sustentabilidad</span><span class="proj-pill">FMCG</span><span class="proj-pill">Pitch</span></div>
+          <a class="li-link" href="https://www.linkedin.com/posts/unilever_swipe-right-ugcPost-7326275788587044866-sf4W" target="_blank">↗ Post de Unilever</a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-icon">⬡</div>
+          <div class="proj-name">NURA</div>
+          <div class="proj-context">Proyecto propio · Marca de bebidas funcionales</div>
+          <div class="proj-desc">Marca de bebidas funcionales con línea RTD (latas), sachets en polvo y pre-workout. Desarrollo completo de go-to-market, estrategia de redes, branding e identidad visual desde cero.</div>
+          <div class="proj-stack"><span class="proj-pill">Branding</span><span class="proj-pill">GTM</span><span class="proj-pill">Social media</span><span class="proj-pill">Producto</span></div>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-icon">♡</div>
+          <div class="proj-name">App para personas con ELA</div>
+          <div class="proj-context">UdeSA · Salud digital & accesibilidad</div>
+          <div class="proj-desc">Aplicación digital para mejorar la calidad de vida de personas con Esclerosis Lateral Amiotrófica. Enfoque en accesibilidad, comunicación asistida y herramientas de apoyo para pacientes y familiares.</div>
+          <div class="proj-stack"><span class="proj-pill">Salud digital</span><span class="proj-pill">Accesibilidad</span><span class="proj-pill">UX</span><span class="proj-pill">Impacto social</span></div>
+          <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_ela-esclerosislateralamiotrofica-saluddigital-activity-7435090327599882241-x9Dx" target="_blank">↗ Ver en LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-icon">🌍</div>
+          <div class="proj-name">App de integración para expatriados</div>
+          <div class="proj-context">Impact Hub Londres · Social innovation</div>
+          <div class="proj-desc">Aplicación para personas que se mudan lejos de sus países y quieren conocer gente local y aprender el idioma. Desarrollada en Impact Hub London con metodología de innovación social.</div>
+          <div class="proj-stack"><span class="proj-pill">Social innovation</span><span class="proj-pill">UX</span><span class="proj-pill">Comunidad</span><span class="proj-pill">Londres</span></div>
+          <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_inclusive-london-regentsuniversity-activity-7389279754039857152-F0uL" target="_blank">↗ Ver en LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-icon">◉</div>
+          <div class="proj-name">Plataforma financiera con IA</div>
+          <div class="proj-context">UdeSA · Design Thinking integrador</div>
+          <div class="proj-desc">Herramienta de gestión financiera personal para jóvenes con IA conversacional. Módulos de presupuesto, ahorro e inversión. Desarrollada con metodología Design Thinking.</div>
+          <div class="proj-stack"><span class="proj-pill">FinTech</span><span class="proj-pill">Design Thinking</span><span class="proj-pill">IA</span><span class="proj-pill">UX</span></div>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-icon">▣</div>
+          <div class="proj-name">Arcor / BC — Pitch corporativo</div>
+          <div class="proj-context">Innovación corporativa</div>
+          <div class="proj-desc">Propuesta de innovación para Arcor: sachets de sabor para mezclar con mayonesa BC. Pitch con análisis de mercado, viabilidad y posicionamiento presentado en formato corporativo.</div>
+          <div class="proj-stack"><span class="proj-pill">Pitch</span><span class="proj-pill">Innovación</span><span class="proj-pill">FMCG</span></div>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-body">
+          <div class="proj-icon">◆</div>
+          <div class="proj-name">Herramienta de análisis e-commerce</div>
+          <div class="proj-context">Startup digital · IA + omnicanal</div>
+          <div class="proj-desc">Plataforma de análisis competitivo para e-commerce en Argentina. Diferenciada de Real Trends por análisis omnicanal, matching visual de productos con IA y generador inteligente de listings.</div>
+          <div class="proj-stack"><span class="proj-pill">IA</span><span class="proj-pill">E-commerce</span><span class="proj-pill">Product strategy</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sub-label" style="margin-top:0.5rem">Proyectos académicos — tecnología & datos</div>
+    <div class="proj-grid">
+
+      <div class="proj-card tech">
+        <div class="proj-body">
+          <div class="proj-icon">▤</div>
+          <div class="proj-name">Análisis de caída de ventas Apple</div>
+          <div class="proj-context">UdeSA · Power BI & Data Analytics</div>
+          <div class="proj-desc">Limpieza de datos, exploración estadística, visualización en Power BI y propuesta de mejoras estratégicas sobre la caída en ventas de Apple en 2023.</div>
+          <div class="proj-stack"><span class="proj-pill">Power BI</span><span class="proj-pill">Data cleaning</span><span class="proj-pill">Análisis</span><span class="proj-pill">Estrategia</span></div>
+          <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_data-driven-marketing-apple-report-federico-activity-7433173525781213184-FKgB" target="_blank">↗ Ver en LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="proj-card tech">
+        <div class="proj-body">
+          <div class="proj-icon">⬡</div>
+          <div class="proj-name">Mejoras para Tienda Nube con ML</div>
+          <div class="proj-context">UdeSA · Machine Learning & IA</div>
+          <div class="proj-desc">Innovación sobre Tienda Nube incorporando machine learning y modelos predictivos para mejorar la experiencia de usuario y la conversión de ventas.</div>
+          <div class="proj-stack"><span class="proj-pill">Machine Learning</span><span class="proj-pill">Modelos predictivos</span><span class="proj-pill">IA</span></div>
+        </div>
+      </div>
+
+      <div class="proj-card tech">
+        <div class="proj-body">
+          <div class="proj-icon">◧</div>
+          <div class="proj-name">App de películas con React</div>
+          <div class="proj-context">UdeSA · Programación</div>
+          <div class="proj-desc">Aplicación web con React y la API de TMDb. Búsqueda, vista de detalle y listado dinámico con manejo de estado y consumo de APIs REST.</div>
+          <div class="proj-stack"><span class="proj-pill">React</span><span class="proj-pill">JavaScript</span><span class="proj-pill">APIs</span><span class="proj-pill">CSS</span></div>
+        </div>
+      </div>
+
+      <div class="proj-card tech">
+        <div class="proj-body">
+          <div class="proj-icon">⬛</div>
+          <div class="proj-name">Bases de datos con SQL</div>
+          <div class="proj-context">UdeSA · Programación & datos</div>
+          <div class="proj-desc">Modelado y consulta de bases de datos relacionales con MySQL. Subconsultas, vistas, funciones y stored procedures para resolver problemas de negocio.</div>
+          <div class="proj-stack"><span class="proj-pill">MySQL</span><span class="proj-pill">SQL</span><span class="proj-pill">Bases de datos</span></div>
+        </div>
+      </div>
+
+      <div class="proj-card tech">
+        <div class="proj-body">
+          <div class="proj-icon">◌</div>
+          <div class="proj-name">Proyecto social · Bahía Blanca</div>
+          <div class="proj-context">UdeSA · Innovación social</div>
+          <div class="proj-desc">Propuesta de soluciones innovadoras ante las inundaciones en Bahía Blanca: análisis de causas y alternativas tecnológicas para la mitigación del riesgo hídrico.</div>
+          <div class="proj-stack"><span class="proj-pill">Innovación social</span><span class="proj-pill">Sustentabilidad</span><span class="proj-pill">Gestión urbana</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GALERIA FOTOS reales -->
+    <div style="margin-top:2.5rem">
+      <div class="sub-label">Galería — Competencias & experiencias</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)">
+          <img id="photo-loreal-team" style="width:100%;height:160px;object-fit:cover;cursor:pointer;display:block" alt="Equipo L'Oréal Brandstorm 2025" onclick="openLB(this)"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:11px;color:#ddd">L'Oréal Brandstorm 2025</div>
+        </div>
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)">
+          <img id="photo-loreal-pitch" style="width:100%;height:160px;object-fit:cover;cursor:pointer;display:block" alt="Pitch L'Oréal Brandstorm en escenario" onclick="openLB(this)"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:11px;color:#ddd">Pitch en vivo — Brandstorm</div>
+        </div>
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)">
+          <img id="photo-unilever" style="width:100%;height:160px;object-fit:cover;cursor:pointer;display:block" alt="Unilever Future Leaders League 2025" onclick="openLB(this)"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:11px;color:#ddd">Unilever UFLL 2025</div>
+        </div>
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)">
+          <img id="photo-london-selfie" style="width:100%;height:160px;object-fit:cover;object-position:top;cursor:pointer;display:block" alt="Federico en Regent's University London" onclick="openLB(this)"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:11px;color:#ddd">Regent's University London</div>
+        </div>
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)">
+          <img id="photo-impact-hub" style="width:100%;height:160px;object-fit:cover;cursor:pointer;display:block" alt="Impact Hub London" onclick="openLB(this)"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:11px;color:#ddd">Impact Hub London</div>
+        </div>
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)">
+          <img id="photo-london-group" style="width:100%;height:160px;object-fit:cover;cursor:pointer;display:block" alt="Grupo en Londres" onclick="openLB(this)"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.8));padding:8px;font-size:11px;color:#ddd">Vida universitaria — Londres</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HABILIDADES -->
+<section id="habilidades">
+  <div class="container">
+    <div class="section-label">Competencias</div>
+    <h2 class="section-title">Habilidades</h2>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <div class="skill-cat-title">Tecnología & datos</div>
+        <div class="skill-list">
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent2)"></div>SQL / MySQL</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent2)"></div>React / JavaScript</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent2)"></div>Power BI</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent2)"></div>Machine Learning</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent2)"></div>Inteligencia Artificial</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent2)"></div>Automatización de procesos</div>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Negocio & estrategia</div>
+        <div class="skill-list">
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent)"></div>Estrategia digital</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent)"></div>E-commerce & dropshipping</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent)"></div>Branding & contenido</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent)"></div>Go-to-market</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent)"></div>Design Thinking</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent)"></div>Innovación de producto</div>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Emprendimiento</div>
+        <div class="skill-list">
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent3)"></div>Pitch & presentaciones</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent3)"></div>Análisis de mercado</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent3)"></div>Gestión de proyectos</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent3)"></div>Tendencias globales</div>
+          <div class="skill-item"><div class="skill-dot" style="background:var(--accent3)"></div>UX Research</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:2rem">
+      <div class="sub-label">Soft skills</div>
+      <div class="soft-grid">
+        <span class="soft-pill">Liderazgo</span><span class="soft-pill">Comunicación</span><span class="soft-pill">Creatividad</span>
+        <span class="soft-pill">Adaptabilidad</span><span class="soft-pill">Pensamiento crítico</span><span class="soft-pill">Trabajo en equipo</span>
+        <span class="soft-pill">Proactividad</span><span class="soft-pill">Orientación a resultados</span><span class="soft-pill">Resolución de problemas</span>
+        <span class="soft-pill">Curiosidad intelectual</span><span class="soft-pill">Gestión del tiempo</span><span class="soft-pill">Empatía</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- IDIOMAS -->
+<section id="idiomas">
+  <div class="container">
+    <div class="section-label">Global mindset</div>
+    <h2 class="section-title">Idiomas & experiencias internacionales</h2>
+    <div class="lang-grid">
+      <div class="lang-card">
+        <div class="lang-flag">🇦🇷</div>
+        <div class="lang-name">Español</div>
+        <div class="lang-level">Nativo</div>
+        <div class="lang-detail">Lengua materna</div>
+        <div class="lang-bar"><div class="lang-fill" style="width:100%"></div></div>
+      </div>
+      <div class="lang-card">
+        <div class="lang-flag">🇬🇧</div>
+        <div class="lang-name">Inglés</div>
+        <div class="lang-level">C1 — Avanzado</div>
+        <div class="lang-detail">EF Education First · Certificado 2022</div>
+        <div class="lang-bar"><div class="lang-fill" style="width:85%"></div></div>
+      </div>
+    </div>
+    <div class="exchange-grid">
+      <div class="exchange-card ldn">
+        <div class="exchange-photos">
+          <img id="exch-london-1" alt="Regent's University London" onclick="openLB(this)"/>
+          <img id="exch-london-2" alt="Federico en Londres" onclick="openLB(this)"/>
+        </div>
+        <div class="exchange-body">
+          <div class="exchange-location">Londres 🇬🇧</div>
+          <div class="exchange-period">Ago 2025 – Dic 2025 · Regent's University London</div>
+          <div class="exchange-desc">Intercambio académico de cinco meses. Foco en data-driven marketing, análisis de datos y estrategia comercial. Networking internacional e innovación social en Impact Hub London.</div>
+          <a class="li-link" href="https://www.linkedin.com/posts/federico-matz_studyabroad-london-digitalbusiness-activity-7433169489917038592-Bh-e" target="_blank">↗ Mi post</a>
+          <a class="li-link" href="https://www.linkedin.com/posts/universidad-de-san-andres_intercambios-udesafederico-matz-ugcPost-7440844226864762880-ooHi" target="_blank">↗ UdeSA sobre mí</a>
+        </div>
+      </div>
+      <div class="exchange-card ny">
+        <div class="exchange-body" style="padding-top:1.8rem">
+          <div class="exchange-location">Estados Unidos 🇺🇸</div>
+          <div class="exchange-period">Ene 2022 – Mar 2022 · EF Education First</div>
+          <div class="exchange-desc">Programa intensivo de inglés con estudiantes internacionales. Convivencia multicultural y clases académicas en inglés. Certificado C1 del Marco Común Europeo.</div>
+          <span style="display:inline-block;margin-top:10px;background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.3);color:var(--accent2);font-size:12px;padding:4px 12px;border-radius:20px">🎓 Certificado C1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="section-label" style="text-align:center">Contacto</div>
+      <h2 class="section-title" style="text-align:center">Hablemos</h2>
+      <p>¿Tenés una propuesta, proyecto o simplemente querés conocerme mejor? Escribime.</p>
+      <div class="contact-links">
+        <a href="mailto:fedematz15@gmail.com" class="contact-btn" target="_blank">✉ fedematz15@gmail.com</a>
+        <a href="https://www.linkedin.com/in/federico-matz/" target="_blank" class="contact-btn">in LinkedIn</a>
+        <a href="https://wa.me/5491139471063" target="_blank" class="contact-btn">💬 WhatsApp</a>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:2rem">Buenos Aires, Argentina · Disponible para trabajo remoto e híbrido</p>
+    </div>
+  </div>
+</section>
+
+<script>
+function openLB(img){
+  const lb=document.getElementById('lb');
+  const lbImg=document.getElementById('lb-img');
+  if(img.src && !img.src.includes('placeholder') && img.naturalWidth>0){
+    lbImg.src=img.src;
+    lb.classList.add('open');
+  }
+}
+function closeLB(){document.getElementById('lb').classList.remove('open')}
+
+// Cargar fotos desde las imágenes subidas por el usuario
+// Como el portfolio corre en el browser sin acceso a las fotos originales,
+// mostramos placeholders con íconos descriptivos hasta que el usuario suba las imágenes.
+// Las fotos se cargan via fetch desde las URLs de Claude (solo funcionan en esta sesión)
+const photoSources = [
+  { ids: ['photo-loreal-team','photo-loreal-pitch'], label: 'L\'Oréal' },
+];
+
+const photoMap = {
+  'photo-loreal-team':   'https://i.imgur.com/zAkfqqB.jpg',
+  'photo-loreal-pitch':  'https://i.imgur.com/ExGvh9i.jpg',
+  'photo-unilever':      'https://i.imgur.com/Hv5OorM.jpg',
+  'photo-london-selfie': 'https://i.imgur.com/ihwxRQh.jpg',
+  'photo-impact-hub':    'https://i.imgur.com/yre0EbO.jpg',
+  'photo-london-group':  'https://i.imgur.com/tzlIXem.jpg',
+  'exch-london-1':       'https://i.imgur.com/ihwxRQh.jpg',
+  'exch-london-2':       'https://i.imgur.com/yre0EbO.jpg',
+};
+
+Object.entries(photoMap).forEach(([id, src]) => {
+  const el = document.getElementById(id);
+  if(el && src){
+    el.src = src;
+    el.style.display = 'block';
+    el.onerror = function(){
+      this.style.display='none';
+      const ph=document.createElement('div');
+      ph.style.cssText='width:100%;height:160px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px';
+      ph.innerHTML='<span style="font-size:28px;opacity:0.3">📷</span><span style="font-size:11px;color:#444">No se pudo cargar</span>';
+      this.parentElement.insertBefore(ph,this);
+    };
+  }
+});
+</script>
+</body>
+</html>
