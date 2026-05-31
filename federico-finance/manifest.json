@@ -1,18 +1,9 @@
 {
   "name": "Federico Finance",
   "short_name": "FF",
-  "description": "Tu app de finanzas personales",
-  "start_url": "/federico-finance/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1a1a1a",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+  "icons": [{"src": "icon.svg","sizes": "any","type": "image/svg+xml"}]
 }
