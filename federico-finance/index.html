@@ -415,28 +415,107 @@ function go(screen,btn){
   if(screen==='config')renderConfig();
 }
 
+// AGENT REPLACEMENT - paste this between the old initChat/handleChat/sendChat functions
+
 let chatDone=false;
 function initChat(){
   if(chatDone)return;chatDone=true;
   const c=$('chat');c.innerHTML='';
-  addMsg('bot','Hola Fede! 💰 Tengo acceso a todos tus datos. ¿Qué querés saber?');
+  addMsg('bot','Hola Fede! \ud83d\udcb0 Soy tu agente financiero. Analizá tus datos y pedime lo que quieras.');
   const cd=document.createElement('div');cd.style.marginTop='8px';
-  ['¿En qué gasté más?','¿Cuánto llevo gastado?','¿Cómo van mis metas?','Recomendaciones'].forEach(ch=>{const s=document.createElement('span');s.className='chip';s.textContent=ch;s.onclick=()=>handleChat(ch);cd.appendChild(s);});
+  ['Dame un resumen','\u00bfEn qu\u00e9 gast\u00e9 m\u00e1s?','Comparar con mes anterior','\u00bfCu\u00e1ndo llego a mi meta?','\u00bfC\u00f3mo va mi ahorro?','\u00bfQu\u00e9 puedo mejorar?'].forEach(ch=>{const s=document.createElement('span');s.className='chip';s.textContent=ch;s.onclick=()=>handleChat(ch);cd.appendChild(s);});
   c.appendChild(cd);
 }
 function addMsg(type,text){const c=$('chat');const d=document.createElement('div');d.className='msg '+type;d.textContent=text;c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function getMonthData(month){const txs=txsMonth(month);return{txs,spend:totalSpend(txs),income:totalInc(txs),familiar:totalFam(txs),balance:totalInc(txs)-totalSpend(txs),bycat:S.cats.map(c=>({...c,s:spend(c.id,txs)})).filter(c=>c.s>0).sort((a,b)=>b.s-a.s),count:txs.filter(t=>t.tipo==='personal').length};}
+function getCurrentMonths(){const now=new Date();const months=[];for(let i=0;i<3;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);let m=d.toLocaleString('es-AR',{month:'long',timeZone:'America/Argentina/Buenos_Aires'});months.push(m.charAt(0).toUpperCase()+m.slice(1)+' '+d.getFullYear());}return months;}
 function handleChat(text){
   addMsg('user',text);
-  const txs=txsMonth(S.month),sp=totalSpend(txs),inc=totalInc(txs),tl=text.toLowerCase();
+  const tl=text.toLowerCase();
+  const months=getCurrentMonths();
+  const cur=getMonthData(months[0]);
+  const prev=getMonthData(months[1]);
   setTimeout(()=>{
-    let r='';
-    if(tl.includes('gasté más')){const top=S.cats.map(c=>({...c,s:spend(c.id,txs)})).sort((a,b)=>b.s-a.s).filter(c=>c.s>0)[0];r=top?`Más en ${top.e} ${top.n}: ${pesos(top.s)} (${sp?Math.round(top.s/sp*100):0}% del total).`:'Sin gastos todavía.';}
-    else if(tl.includes('gastado')){r=`Llevás ${pesos(sp)} gastados e ${pesos(inc)} de ingresos. Balance: ${pesos(inc-sp)}.`;}
-    else if(tl.includes('metas')){if(!S.goals.length)r='Sin metas todavía. Creá una en la sección Metas.';else{const g=S.goals[0];r=`"${g.e} ${g.n}" al ${Math.round(g.saved/g.target*100)}% (${pesos(g.saved)} de ${pesos(g.target)}).`;}}
-    else if(tl.includes('recomend')){const w=S.cats.filter(c=>{const s=spend(c.id,txs);return c.b&&s>c.b*0.8;});r=w.length?`Revisá: ${w.map(c=>c.e+' '+c.n).join(', ')}. Cerca del límite.`:'¡Vas bien! Sin alertas 💪';}
-    else{addMsg('bot','Dame un segundo...');return;}
-    addMsg('bot',r);
-  },400);
+    let lines=[];
+    if(tl.includes('resumen')||tl.includes('estoy')){
+      if(cur.spend===0&&cur.income===0){addMsg('bot','Todav\u00eda no cargaste datos este mes. Toc\u00e1 + para empezar.');return;}
+      const bal=cur.balance>=0?'positivo \u2705':'negativo \u26a0\ufe0f';
+      lines.push('Resumen de '+months[0]+':');
+      lines.push('');
+      lines.push('\ud83d\udcb0 Ingresos: '+pesos(cur.income));
+      lines.push('\ud83d\udcb8 Gastos: '+pesos(cur.spend));
+      lines.push('\ud83d\udcc8 Balance: '+pesos(cur.balance)+' ('+bal+')');
+      if(cur.bycat.length)lines.push('');lines.push('Mayor gasto: '+cur.bycat[0].e+' '+cur.bycat[0].n+' '+pesos(cur.bycat[0].s));
+      if(cur.familiar>0){lines.push('');lines.push('Te deben: '+pesos(cur.familiar));}
+    }
+    else if(tl.includes('gast\u00e9 m\u00e1s')||tl.includes('gaste mas')||tl.includes('m\u00e1s gasto')){
+      if(!cur.bycat.length){addMsg('bot','No hay gastos cargados este mes.');return;}
+      lines.push('Top gastos de '+months[0]+':');lines.push('');
+      cur.bycat.slice(0,3).forEach((c,i)=>{const p=cur.spend>0?Math.round(c.s/cur.spend*100):0;lines.push((i+1)+'. '+c.e+' '+c.n+': '+pesos(c.s)+' ('+p+'%)');});
+      lines.push('');lines.push('Total: '+pesos(cur.spend));
+    }
+    else if(tl.includes('comparar')||tl.includes('anterior')||tl.includes('pasado')){
+      if(prev.spend===0&&cur.spend===0){addMsg('bot','No hay datos suficientes para comparar.');return;}
+      const diff=cur.spend-prev.spend;const pct=prev.spend>0?Math.round(Math.abs(diff)/prev.spend*100):0;
+      lines.push('Comparaci\u00f3n:');lines.push('');
+      lines.push(months[0]+': '+pesos(cur.spend));
+      lines.push(months[1]+': '+pesos(prev.spend));
+      lines.push('');
+      if(diff>0)lines.push('Tus gastos subieron '+pct+'% (+'+pesos(diff)+')');
+      else if(diff<0)lines.push('Tus gastos bajaron '+pct+'% ('+pesos(diff)+') \u2705');
+      else lines.push('Igual que el mes pasado');
+      if(diff>0&&pct>20)lines.push('\u26a0\ufe0f Subiste bastante. Revis\u00e1 en qu\u00e9 gastaste m\u00e1s.');
+    }
+    else if(tl.includes('ahorro')){
+      const ti=S.invs.reduce((a,i)=>a+i.inv,0);const tc=S.invs.reduce((a,i)=>a+i.cur,0);const g=tc-ti;
+      lines.push('Estado de ahorro:');lines.push('');
+      lines.push('Balance este mes: '+pesos(cur.balance));
+      if(ti>0){lines.push('Total invertido: '+pesos(ti));if(g!==0)lines.push('Ganancia/p\u00e9rdida: '+(g>=0?'+':'')+pesos(g));}
+      if(S.goals.length){lines.push('');lines.push('Metas activas:');S.goals.forEach(g2=>{lines.push(g2.e+' '+g2.n+': '+Math.round(g2.saved/g2.target*100)+'%');});}
+    }
+    else if(tl.includes('meta')||tl.includes('objetivo')||tl.includes('llego')||tl.includes('cu\u00e1ndo')){
+      if(!S.goals.length){addMsg('bot','No ten\u00e9s metas creadas. And\u00e1 a Metas para crear una.');return;}
+      const avg=cur.balance>0?cur.balance:prev.balance>0?prev.balance:0;
+      S.goals.forEach(g=>{
+        const falta=g.target-g.saved;const pct=Math.round(g.saved/g.target*100);
+        lines.push(g.e+' '+g.n+':');
+        if(pct>=100){lines.push('\u2705 Meta cumplida!');}
+        else{
+          lines.push(pesos(g.saved)+' de '+pesos(g.target)+' ('+pct+'%)');
+          if(avg>0){const meses=Math.ceil(falta/avg);const fecha=new Date();fecha.setMonth(fecha.getMonth()+meses);lines.push('Faltan ~'+meses+' meses \u2192 '+fecha.toLocaleString('es-AR',{month:'long',year:'numeric'}));}
+          else lines.push('Carg\u00e1 ingresos para calcular proyecci\u00f3n.');
+        }
+        lines.push('');
+      });
+    }
+    else if(tl.includes('mejorar')||tl.includes('recomend')||tl.includes('consejo')){
+      const tips=[];
+      S.cats.forEach(c=>{if(!c.b)return;const s=spend(c.id,cur.txs);const p=s/c.b;if(p>=1)tips.push('\u26a0\ufe0f Superaste '+c.n+': '+pesos(s)+' de '+pesos(c.b));else if(p>=0.8)tips.push('\u26a1 Casi en el l\u00edmite de '+c.n+': '+Math.round(p*100)+'%');});
+      if(cur.familiar>0)tips.push('\ud83d\udca1 Cob\u00e1 '+pesos(cur.familiar)+' de gastos familiares pendientes');
+      if(prev.spend>0&&cur.spend>prev.spend*1.2)tips.push('\ud83d\udcc8 Gastaste 20%+ m\u00e1s que el mes pasado');
+      if(!tips.length){addMsg('bot','\u2705 \u00a1Todo bien! Est\u00e1s dentro del presupuesto. Segu\u00ed as\u00ed.');return;}
+      lines.push('Cosas a mejorar:');lines.push('');tips.forEach(t=>lines.push(t));
+    }
+    else if(tl.includes('invertir')||tl.includes('s&p')||tl.includes('bitcoin')){
+      lines.push('Inversiones:');lines.push('');
+      if(S.invs.length){S.invs.forEach(i=>{const g=i.cur-i.inv;lines.push(i.n+': '+pesos(i.cur)+' ('+(g>=0?'+':'')+pesos(g)+')');});}
+      else lines.push('Sin inversiones registradas.');
+      const disp=cur.balance>0?cur.balance:0;
+      if(disp>0){lines.push('');lines.push('Disponible: '+pesos(disp));lines.push('Sugerencia: 60% S&P ('+pesos(disp*0.6)+') + 40% BTC ('+pesos(disp*0.4)+')');}
+    }
+    else if(tl.includes('total')||tl.includes('cu\u00e1nto gast\u00e9')){
+      lines.push('Este mes ('+months[0]+'):');lines.push('');
+      lines.push('\ud83d\udcb8 Gastos: '+pesos(cur.spend));
+      lines.push('\ud83d\udcb0 Ingresos: '+pesos(cur.income));
+      lines.push('\ud83d\udcca Balance: '+pesos(cur.balance));
+      lines.push('\ud83d\udd22 Movimientos: '+cur.count);
+    }
+    else{
+      lines.push('Podés preguntarme:');lines.push('');
+      ['Dame un resumen','¿En qué gasté más?','Comparar con mes anterior','¿Cuándo llego a mi meta?','¿Cómo va mi ahorro?','¿Qué puedo mejorar?'].forEach(q=>lines.push('• '+q));
+    }
+    if(lines.length)addMsg('bot',lines.join('\n'));
+  },150);
 }
 function sendChat(){const inp=$('ag-in');const t=inp.value.trim();if(!t)return;handleChat(t);inp.value='';}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement.id==='ag-in')sendChat();});
